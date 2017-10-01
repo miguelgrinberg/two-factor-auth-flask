@@ -1,14 +1,14 @@
 import os
 import base64
-from io import StringIO
+from io import BytesIO
 from flask import Flask, render_template, redirect, url_for, flash, session, \
     abort
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager, UserMixin, login_user, logout_user, \
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, \
     current_user
-from flask.ext.bootstrap import Bootstrap
-from flask.ext.wtf import Form
+from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import Required, Length, EqualTo
 import onetimepass
@@ -63,7 +63,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     """Registration form."""
     username = StringField('Username', validators=[Required(), Length(1, 64)])
     password = PasswordField('Password', validators=[Required()])
@@ -72,7 +72,7 @@ class RegisterForm(Form):
     submit = SubmitField('Register')
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     """Login form."""
     username = StringField('Username', validators=[Required(), Length(1, 64)])
     password = PasswordField('Password', validators=[Required()])
@@ -88,7 +88,7 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration route."""
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         # if user is logged in we get out of here
         return redirect(url_for('index'))
     form = RegisterForm()
@@ -136,9 +136,9 @@ def qrcode():
 
     # render qrcode for FreeTOTP
     url = pyqrcode.create(user.get_totp_uri())
-    stream = StringIO()
+    stream = BytesIO()
     url.svg(stream, scale=3)
-    return stream.getvalue().encode('utf-8'), 200, {
+    return stream.getvalue(), 200, {
         'Content-Type': 'image/svg+xml',
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
@@ -148,7 +148,7 @@ def qrcode():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """User login route."""
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         # if user is logged in we get out of here
         return redirect(url_for('index'))
     form = LoginForm()
