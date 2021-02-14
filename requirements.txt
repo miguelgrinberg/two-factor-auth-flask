@@ -7,7 +7,7 @@ Flask-SQLAlchemy==2.3.0
 Flask-WTF==0.14.2
 itsdangerous==0.24
 Jinja2==2.9.6
-MarkupSafe==1.0
+MarkupSafe==1.1.1
 onetimepass==1.0.1
 PyQRCode==1.2.1
 six==1.11.0
