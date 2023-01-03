@@ -11,7 +11,7 @@ MarkupSafe==1.1.1
 onetimepass==1.0.1
 PyQRCode==1.2.1
 six==1.11.0
-SQLAlchemy==1.1.14
+SQLAlchemy==1.3.0
 visitor==0.1.3
 Werkzeug==0.12.2
 WTForms==2.1
